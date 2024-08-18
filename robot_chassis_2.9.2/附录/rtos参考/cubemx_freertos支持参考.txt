@@ -1,0 +1,23 @@
+一.编程指南，系统配置参考：
+https://blog.csdn.net/qq_45396672/article/details/120877303
+
+
+
+
+二.下面这篇文章总结：1.在除了rtos任务之外的任何地方使用osdelay都会导致硬件卡死，在这些地方可以选择使用HAL_Delay
+
+2.该加锁的时候要加锁，加锁的方法：osSemaphoreAcquire
+解锁的方法：osSemaphoreRelease
+
+https://blog.csdn.net/qq_33033059/article/details/118333477?spm=1001.2101.3001.6650.13&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-13.fixedcolumn&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-13.fixedcolumn
+
+三.自己的一些总结：
+1.如果在rtos中的某个任务的主循环中什么也不干，但是也不延时，即如下操作：
+while(1){} 或者for (;;){}
+那么会导致很严重的问题：无法进入中断函数，1.0版本删除了for循环中的所有内容，结果系统心跳时钟直接停止跳动了。
+这也是为什么cubemx在生成任务代码的时候，即使任务主循环什么也不干，但是仍然要osDelay(1)的原因
+
+
+
+
+
