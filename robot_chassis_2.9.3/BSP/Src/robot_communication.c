@@ -61,9 +61,9 @@ void ros_object_init(void){
 返回  值：略
 **************************************************************************/
 static void ros_dispose_data(uint8_t *data, uint8_t size){
-	(*ros_upper_computer.x_target_speed) = ((data[4]<<8)|data[3]);
-	(*ros_upper_computer.y_target_speed) = ((data[6]<<8)|data[5]);
-	(*ros_upper_computer.z_target_speed) = ((data[8]<<8)|data[7]);
+	(*ros_upper_computer.x_target_speed) = (((short)data[4]<<8)|data[3]);
+	(*ros_upper_computer.y_target_speed) = (((short)data[6]<<8)|data[5]);
+	(*ros_upper_computer.z_target_speed) = (((short)data[8]<<8)|data[7]);
 }
 
 /**************************************************************************
@@ -74,7 +74,7 @@ static void ros_dispose_data(uint8_t *data, uint8_t size){
 返回  值：略
 **************************************************************************/
 void robot_uart_rx_one_byte_callback(uint8_t rxByte){
-	while (1){ //如果是串口3
+	while (1){ //如果是串口4
 		ros_rx_buf[ros_rx_cnt] = rxByte;
 		if (ros_rx_cnt == 0 && ros_rx_buf[ros_rx_cnt] != 0x7B) break; //帧头不对，丢掉
 		ros_rx_cnt++;

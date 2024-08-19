@@ -23,6 +23,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -68,6 +69,13 @@ const osThreadAttr_t myTask03_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for myTask04 */
+osThreadId_t myTask04Handle;
+const osThreadAttr_t myTask04_attributes = {
+  .name = "myTask04",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* Definitions for system_timer */
 osTimerId_t system_timerHandle;
 const osTimerAttr_t system_timer_attributes = {
@@ -82,6 +90,7 @@ const osTimerAttr_t system_timer_attributes = {
 void StartDefaultTask(void *argument);
 void StartTask02(void *argument);
 void StartTask03(void *argument);
+void StartTask04(void *argument);
 void system_timer_callback(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -126,6 +135,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of myTask03 */
   myTask03Handle = osThreadNew(StartTask03, NULL, &myTask03_attributes);
 
+  /* creation of myTask04 */
+  myTask04Handle = osThreadNew(StartTask04, NULL, &myTask04_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -142,6 +154,8 @@ void MX_FREERTOS_Init(void) {
   * @param  argument: Not used
   * @retval None
   */
+#define THRESHOLD_DEVIATION 5
+#define CYCLE 2
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
@@ -149,12 +163,41 @@ void StartDefaultTask(void *argument)
 	uint8_t str[] = "SuperEgo";
 	OLED_ShowString(30, 0, str);
 	OLED_Refresh_Gram();
-	
+	int cut_control=0;
+	float ix_contral =0;
+	float iy_contral =0;
+	float iz_contral =0;
+
 	osTimerStart(system_timerHandle, 1);//开启系统软件定时器，设置周期为1个系统节拍(1ms)
+	//chassis_control_test();
   /* Infinite loop */
   for(;;)
   {
-		fsi6_control();
+		
+		ix_contral =SBUS_CH.CH1;
+		iy_contral =SBUS_CH.CH2;
+		iz_contral =SBUS_CH.CH4;
+		if((1024-THRESHOLD_DEVIATION)<ix_contral&&\
+				ix_contral<(1024+THRESHOLD_DEVIATION)&&\
+				(1024-THRESHOLD_DEVIATION)<iy_contral&&\
+				iy_contral<(1024+THRESHOLD_DEVIATION)&&\
+				(1024-THRESHOLD_DEVIATION)<iz_contral&&\
+				iz_contral<(1024+THRESHOLD_DEVIATION))
+		{
+			cut_control++;
+		}else{
+			cut_control=0;
+		}
+		
+		if(cut_control<CYCLE*50){
+			fsi6_control();
+			rtos_printf("fsi6\r\n");
+			
+		}else{
+			chassis_ros_control();
+			rtos_printf("ros\r\n");
+			cut_control=CYCLE*50;
+		}
     osDelay(20);
   }
   /* USER CODE END StartDefaultTask */
@@ -176,6 +219,7 @@ void StartTask02(void *argument)
 //	motorB.speed = 20;
 //	motorC.speed = 20;
 //	motorD.speed = 20;
+
 	motor_task();
 	
 	//温警提示：在StartTask02这个任务中，这一行以后，写的任何代码都无效(motor_task是死循环)
@@ -207,6 +251,7 @@ void StartTask03(void *argument)
   /* Infinite loop */
   for(;;)
   {
+		sbus_show_ch();
 		//下面三行显示pwmD的输出值，调pid的时候使用，来查看电机的控制是否足够平滑
 //		sprintf(oled_str,"%5d", pwmD);
 //		OLED_ShowString(30, 48, (u8*)oled_str);
@@ -246,6 +291,25 @@ void StartTask03(void *argument)
 		osDelay(20);
   }
   /* USER CODE END StartTask03 */
+}
+
+/* USER CODE BEGIN Header_StartTask04 */
+/**
+* @brief Function implementing the myTask04 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask04 */
+void StartTask04(void *argument)
+{
+  /* USER CODE BEGIN StartTask04 */
+  /* Infinite loop */
+  for(;;)
+  {
+		
+    osDelay(1);
+  }
+  /* USER CODE END StartTask04 */
 }
 
 /* system_timer_callback function */

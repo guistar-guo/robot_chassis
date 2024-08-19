@@ -5,7 +5,7 @@
 
 void chassis_control_test(void);
 void chassis_control(short x,short y,short w);
-
+void chassis_ros_control(void);
 
 #endif
 

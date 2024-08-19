@@ -65,8 +65,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == USART3){//串口3暂时不负责接收处理
 		//待开发...
+		
 	}
 	HAL_UART_Receive_IT(&huart3, (u8 *)UART3_RX_BUF, 1);
+	//HAL_UART_Transmit_IT(&huart3, (u8 *)UART3_RX_BUF, 1);
 	
 	if(huart->Instance == UART4){//串口4负责解析机器人通信协议
 		robot_uart_rx_one_byte_callback(UART4_RX_BUF[0]);
@@ -79,6 +81,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	HAL_UART_Receive_IT(&huart5, (u8 *)UART5_RX_BUF, 1);
 }
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart->Instance == USART3){
+		
+	}
+	
+	
+}
 
 
 
