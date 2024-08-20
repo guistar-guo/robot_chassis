@@ -85,6 +85,10 @@ robot_communication.c/h：负责所有与ros相关的通讯工作
 2024/8/20
 1.优化了chassis_control模块的代码（增加了宏定义来提高代码可读性），修复了chassis_ros_control函数控制失效的bug（此bug产生的原因是开发人员未解引用指针）
 
+************************robot_chassis2.9.5***********************
+2024/8/20
+1.优化了富斯遥控（sbus）与ros指令同时控制小车的逻辑。富斯遥控（sbus）断电时，sbus的flags字节为零，两秒后，ros指令开始起作用。
+
 
 
 

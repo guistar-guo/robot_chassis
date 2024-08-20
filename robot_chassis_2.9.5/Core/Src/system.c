@@ -10,7 +10,7 @@ void system_init(void)
 	motor_init();							//初始化电机
 //	my_uart_IT_re_enable();		//开启串口3中断
 	HAL_UART_Receive_IT(&huart3, (u8 *)UART3_RX_BUF, 1);
-	HAL_UART_Receive_IT(&huart4, (u8 *)UART4_RX_BUF, 1);
+	HAL_UART_Receive_IT(&huart4, (u8 *)UART4_RX_BUF, 1);//开启串口4接收中断，用以解析ros协议
 	HAL_UART_Receive_IT(&huart5, (u8 *)UART5_RX_BUF, 1); //开启串口5接收中断，用以解析sbus协议
 	
 	OLED_Init();							//初始化OLED显示屏

@@ -164,25 +164,19 @@ void StartDefaultTask(void *argument)
 	OLED_ShowString(30, 0, str);
 	OLED_Refresh_Gram();
 	int cut_control=0;
-	float ix_contral =0;
-	float iy_contral =0;
-	float iz_contral =0;
-
 	osTimerStart(system_timerHandle, 1);//开启系统软件定时器，设置周期为1个系统节拍(1ms)
 	//chassis_control_test();
   /* Infinite loop */
   for(;;)
   {
-		
-		ix_contral =SBUS_CH.CH1;
-		iy_contral =SBUS_CH.CH2;
-		iz_contral =SBUS_CH.CH4;
-		if((1024-THRESHOLD_DEVIATION)<ix_contral&&\
-				ix_contral<(1024+THRESHOLD_DEVIATION)&&\
-				(1024-THRESHOLD_DEVIATION)<iy_contral&&\
-				iy_contral<(1024+THRESHOLD_DEVIATION)&&\
-				(1024-THRESHOLD_DEVIATION)<iz_contral&&\
-				iz_contral<(1024+THRESHOLD_DEVIATION))
+
+		if(((1024-THRESHOLD_DEVIATION)<SBUS_CH.CH1&&\
+				SBUS_CH.CH1<(1024+THRESHOLD_DEVIATION)&&\
+				(1024-THRESHOLD_DEVIATION)<SBUS_CH.CH2&&\
+				SBUS_CH.CH2<(1024+THRESHOLD_DEVIATION)&&\
+				(1024-THRESHOLD_DEVIATION)<SBUS_CH.CH4&&\
+				SBUS_CH.CH4<(1024+THRESHOLD_DEVIATION))||\
+				SBUS_CH.ConnectState == 0)
 		{
 			cut_control++;
 		}else{
