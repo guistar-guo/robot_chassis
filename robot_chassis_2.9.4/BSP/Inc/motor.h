@@ -9,6 +9,7 @@
 #define MOTORC_POLARITY -1
 #define MOTORD_POLARITY 1
 #define SMOOTH_STEP 0.8f
+#define MOTOR_SPEED_MAX 80	//定义电机的最大速度（Motor对象的speed成员变量可以赋值的最大值）
 
 typedef void (*motor_set_pwm)(int16_t pwm);
 typedef void (*Clear_encoder)(void);

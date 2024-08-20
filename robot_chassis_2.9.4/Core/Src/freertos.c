@@ -191,11 +191,11 @@ void StartDefaultTask(void *argument)
 		
 		if(cut_control<CYCLE*50){
 			fsi6_control();
-			rtos_printf("fsi6\r\n");
+			rtos_printf("fsi6 controling...\r\n");
 			
 		}else{
 			chassis_ros_control();
-			rtos_printf("ros\r\n");
+			rtos_printf("ros controling...\r\n");
 			cut_control=CYCLE*50;
 		}
     osDelay(20);
