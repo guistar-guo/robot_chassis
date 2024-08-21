@@ -23,7 +23,6 @@
 #include "main.h"
 #include "cmsis_os.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -154,8 +153,8 @@ void MX_FREERTOS_Init(void) {
   * @param  argument: Not used
   * @retval None
   */
-#define THRESHOLD_DEVIATION 5
-#define CYCLE 2
+#define THRESHOLD_DEVIATION 10
+#define CYCLE 1
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
@@ -185,13 +184,15 @@ void StartDefaultTask(void *argument)
 		
 		if(cut_control<CYCLE*50){
 			fsi6_control();
-			rtos_printf("fsi6 controling...\r\n");
+			system_led_switch_color(RED);//sbus控制模式下，心跳灯为红色
 			
 		}else{
 			chassis_ros_control();
-			rtos_printf("ros controling...\r\n");
+			system_led_switch_color(GREEN);//ros控制模式下，心跳灯为绿色
+
 			cut_control=CYCLE*50;
 		}
+//		rtos_printf("%d\r\n",cut_control);
     osDelay(20);
   }
   /* USER CODE END StartDefaultTask */
@@ -282,7 +283,7 @@ void StartTask03(void *argument)
 		
 		OLED_Refresh_Gram();
 		
-		osDelay(20);
+		osDelay(200);
   }
   /* USER CODE END StartTask03 */
 }

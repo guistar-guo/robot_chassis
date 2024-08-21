@@ -82,6 +82,8 @@ void Error_Handler(void);
 #define MOTOR_ENABLE_GPIO_Port GPIOE
 #define BIN2_Pin GPIO_PIN_0
 #define BIN2_GPIO_Port GPIOC
+#define USER_Pin GPIO_PIN_5
+#define USER_GPIO_Port GPIOC
 #define AIN1_Pin GPIO_PIN_12
 #define AIN1_GPIO_Port GPIOB
 #define AIN2_Pin GPIO_PIN_13

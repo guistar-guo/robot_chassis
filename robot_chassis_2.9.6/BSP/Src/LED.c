@@ -2,7 +2,7 @@
   ******************************************************************************
   * File Name          : LED.c
   * Description        : led灯，蜂鸣器
-	* @author            : SuperEgo-郭耀辉
+	* @author            : SuperEgo-郭耀辉   吴树涛（负责改进）
   ******************************************************************************
   * @attention
   *
@@ -18,6 +18,8 @@
 
 Led_Color led_color = RED;//系统心跳默认是红色
 
+u8 is_chongfu = 0;//重复检测变量
+
 /**************************************************************************
 函数功能：更换系统心跳灯的颜色
 入口参数：RED, GREEN, BLUE
@@ -25,10 +27,17 @@ Led_Color led_color = RED;//系统心跳默认是红色
 **************************************************************************/
 void system_led_switch_color(Led_Color color)
 {
-	LED_R_OFF();
-	LED_G_OFF();
-	LED_B_OFF();
-	led_color = color;
+	while(1){
+		if(color == led_color){
+			break;
+		}else{
+			led_color = color;
+			LED_B_ON();
+			LED_G_ON();
+			LED_R_ON();
+			break;
+		}
+	}
 }
 
 /**************************************************************************
@@ -41,13 +50,19 @@ void system_led_heat(void)
 	switch(led_color)
 	{
 		case RED:
-			LED_R_TRI();
+			LED_B_TRI();
+			LED_G_TRI();
+//			LED_R_TRI();
 			break;
 		case GREEN:
-			LED_G_TRI();
+			LED_B_TRI();
+//			LED_G_TRI();
+			LED_R_TRI();
 			break;
 		case BLUE:
-			LED_B_TRI();
+//			LED_B_TRI();
+			LED_G_TRI();
+			LED_R_TRI();
 			break;
 	}
 }

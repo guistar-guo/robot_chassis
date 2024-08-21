@@ -17,7 +17,8 @@ void system_init(void)
 	MPU6050_initialize();			//初始化陀螺仪。提醒：陀螺仪的初始化很耗时，对于上电就需要立即初始化的模块，最好放在这一句的前面
 	encoder_init();						//初始化4个编码器
 	servos_init();						//初始化舵机
-	system_led_switch_color(RED);
+	
+	system_led_switch_color(RED);//设置心跳灯为红色
 	ros_object_init();
 }
 

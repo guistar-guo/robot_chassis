@@ -2,7 +2,8 @@
   ******************************************************************************
   * File Name          : sbus.c
   * Description        : sbus协议，航模遥控
-	* @author            : 天科大-机器人实验室-郭耀辉
+	* @author            : 天科大-机器人实验室-郭耀辉  
+  *                      天科大-机器人实验室-吴树涛（负责改进）
   ******************************************************************************
   * @attention
   *
@@ -61,23 +62,21 @@ uint8_t update_sbus(uint8_t *buf)
 返回  值：略
 **************************************************************************/
 void sbus_rec_one_byte_callback(uint8_t byte){
-	while(1)
-	{
+	while(1){
 		sbus_rx_buf[sbus_rx_cnt] = byte;
 		if (sbus_rx_cnt == 0 && sbus_rx_buf[sbus_rx_cnt] != 0x0F) break; //帧头不对，丢掉
 		sbus_rx_cnt++;
-		if (sbus_rx_cnt > 25) sbus_rx_cnt = 0;  ///接收数据错误,重新开始接收
-		if (sbus_rx_buf[0] == 0x0F && sbus_rx_buf[24] == 0x00 && sbus_rx_cnt == 25)	//接受完一帧数据
-		{			
-			update_sbus(sbus_rx_buf);
+		if (sbus_rx_cnt == 25){
+			if(sbus_rx_buf[24] == 0x00)
+				update_sbus(sbus_rx_buf);
 			for (int i = 0; i<25; i++)		//清空缓存区
 				sbus_rx_buf[i] = 0;
 			sbus_rx_cnt = 0;
+			break;	
 		}
 		break;
-	}
+	} 
 }
-
 /**************************************************************************
 函数功能：打印出若干个sbus通道的当前值（按需求更改）
 入口参数：略

@@ -109,7 +109,7 @@ void robot_uart_rx_one_byte_callback(uint8_t rxByte){
 ·µ»Ø  Öµ£ºÂÔ
 **************************************************************************/
 static void ros_send_bytes(uint8_t * start, uint8_t size){
-	HAL_UART_Transmit_DMA(&huart4, start, size);
+	HAL_UART_Transmit(&huart4, start, size, HAL_MAX_DELAY);
 }
 
 /**************************************************************************
