@@ -557,7 +557,9 @@ void mpu6050_get_data(void){
 		MPU_Get_Gyroscope();
 		MPU_Get_Accelscope();
 //		rtos_printf("%d\t%d\t%d\t%d\t%d\t%d\t\r\n", gyro[0]/3753, gyro[1]/3753, gyro[2]/3753,accel[0]/1672,accel[1]/1672,accel[2]/1672);
-		rtos_printf("%d\t%d\t%d\t%d\t%d\t%d\t\r\n", gyro[0], gyro[1], gyro[2],accel[0],accel[1],accel[2]);
+//		rtos_printf("%d\t%d\t%d\t%d\t%d\t%d\t\r\n", gyro[0], gyro[1], gyro[2],accel[0],accel[1],accel[2]);
+
+		
 		osDelay(200);
 	}
 }

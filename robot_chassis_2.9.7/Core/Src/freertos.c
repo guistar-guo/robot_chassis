@@ -168,29 +168,30 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-
-		if(((1024-THRESHOLD_DEVIATION)<SBUS_CH.CH1&&\
-				SBUS_CH.CH1<(1024+THRESHOLD_DEVIATION)&&\
-				(1024-THRESHOLD_DEVIATION)<SBUS_CH.CH2&&\
-				SBUS_CH.CH2<(1024+THRESHOLD_DEVIATION)&&\
-				(1024-THRESHOLD_DEVIATION)<SBUS_CH.CH4&&\
-				SBUS_CH.CH4<(1024+THRESHOLD_DEVIATION))||\
-				SBUS_CH.ConnectState == 0)
-		{
-			cut_control++;
+		if(HAL_GPIO_ReadPin(GPIOE,GPIO_PIN_4) == 1){
+			system_led_switch_color(BLUE);
+			chassis_control(0,0,0);
 		}else{
-			cut_control=0;
-		}
-		
-		if(cut_control<CYCLE*50){
-			fsi6_control();
-			system_led_switch_color(RED);//sbus控制模式下，心跳灯为红色
-			
-		}else{
-			chassis_ros_control();
-			system_led_switch_color(GREEN);//ros控制模式下，心跳灯为绿色
-
-			cut_control=CYCLE*50;
+			if(((1024-THRESHOLD_DEVIATION)<SBUS_CH.CH1&&\
+					SBUS_CH.CH1<(1024+THRESHOLD_DEVIATION)&&\
+					(1024-THRESHOLD_DEVIATION)<SBUS_CH.CH2&&\
+					SBUS_CH.CH2<(1024+THRESHOLD_DEVIATION)&&\
+					(1024-THRESHOLD_DEVIATION)<SBUS_CH.CH4&&\
+					SBUS_CH.CH4<(1024+THRESHOLD_DEVIATION))||\
+					SBUS_CH.ConnectState == 0){
+					cut_control++;
+			}else{
+				cut_control=0;
+			}
+			if(cut_control<CYCLE*50){
+				fsi6_control();
+				system_led_switch_color(RED);//sbus控制模式下，心跳灯为红色
+				
+			}else{
+				chassis_ros_control();
+				system_led_switch_color(GREEN);//ros控制模式下，心跳灯为绿色
+				cut_control=CYCLE*50;
+			}
 		}
 //		rtos_printf("%d\r\n",cut_control);
     osDelay(20);
@@ -301,7 +302,7 @@ void StartTask04(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		
+
     osDelay(1);
   }
   /* USER CODE END StartTask04 */
@@ -315,10 +316,10 @@ void system_timer_callback(void *argument)
 	{
 		system_led_heat();
 	}
-	if(!(systick % 500)){
-//		MPU_Get_Gyroscope();
-//		MPU_Get_Accelscope();
-//		robot_send_car_attitude();
+	if(!(systick % 200)){
+		MPU_Get_Gyroscope();
+		MPU_Get_Accelscope();
+		robot_send_car_attitude();
 	}
   /* USER CODE END system_timer_callback */
 }
